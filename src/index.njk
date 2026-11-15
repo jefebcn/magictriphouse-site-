@@ -1,0 +1,52 @@
+---
+layout: layout.njk
+---
+<div class="shell">
+  <main id="app" class="app" aria-live="polite">
+    <noscript>
+      <div class="screen">
+        <h1 class="h1">{{ settings.store_name }}</h1>
+        {% for cat in collections.categories %}
+          <h2 class="section-title">{{ cat.data.icon }} {{ cat.data.title }}</h2>
+          {% for p in collections.products %}{% if p.data.category == cat.data.title and p.data.visible != false %}
+            <p>{{ p.data.title }} — {{ settings.currency }}{{ p.data.price }}</p>
+          {% endif %}{% endfor %}
+        {% endfor %}
+      </div>
+    </noscript>
+  </main>
+
+  <nav class="tabbar" aria-label="Navigazione principale">
+    <a href="#/" data-tab="home">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#/menu" data-tab="menu">
+      <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>
+      <span>Menu</span>
+    </a>
+    <a href="#/cart" data-tab="order" class="order" aria-label="Il tuo ordine">
+      <span class="fab">
+        <svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+        Ordina
+      </span>
+      <b class="dot-badge" data-cart-badge hidden>0</b>
+      <span>Ordine</span>
+    </a>
+    <a href="#/offers" data-tab="offers">
+      <svg viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle class="cut" cx="7.5" cy="7.5" r="1.5"/></svg>
+      <span>Offerte</span>
+    </a>
+    <a href="#/info" data-tab="profile">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+      <span>Profilo</span>
+    </a>
+  </nav>
+
+  <div class="drawer" id="drawer" inert></div>
+
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script type="application/json" id="catalog">{{ collections | catalog(settings) | safe }}</script>
+<script src="/assets/app.js" defer></script>
