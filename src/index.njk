@@ -1,0 +1,47 @@
+---
+layout: layout.njk
+---
+<div class="shell">
+  <main id="app" class="app" aria-live="polite">
+    <noscript>
+      <div class="screen">
+        <h1 class="h1">{{ settings.store_name }}</h1>
+        {% for cat in collections.categories %}
+          <h2 class="section-title">{{ cat.data.icon }} {{ cat.data.title }}</h2>
+          {% for p in collections.products %}{% if p.data.category == cat.data.title and p.data.visible != false %}
+            <p>{{ p.data.title }} — {{ settings.currency }}{{ p.data.price }}</p>
+          {% endif %}{% endfor %}
+        {% endfor %}
+      </div>
+    </noscript>
+  </main>
+
+  <nav class="tabbar" aria-label="Navigazione principale">
+    <a href="#/" data-tab="home">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#/search" data-tab="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>Cerca</span>
+    </a>
+    <a href="#/cart" data-tab="cart">
+      <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      <span>Carrello</span>
+      <b class="tab-badge" id="cartBadge" hidden>0</b>
+    </a>
+    <a href="#/favorites" data-tab="favorites">
+      <svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-8.8C1.6 7.9 3.8 4.5 7.2 4.5c2 0 3.4 1.1 4.8 2.8 1.4-1.7 2.8-2.8 4.8-2.8 3.4 0 5.6 3.4 4.2 6.7C19 15.6 12 20 12 20z"/></svg>
+      <span>Preferiti</span>
+    </a>
+    <a href="#/info" data-tab="info">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+      <span>Info</span>
+    </a>
+  </nav>
+
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script type="application/json" id="catalog">{{ collections | catalog(settings) | safe }}</script>
+<script src="/assets/app.js" defer></script>

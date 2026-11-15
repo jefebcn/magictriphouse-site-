@@ -1,0 +1,22 @@
+{
+  "store_name": "Il Tuo Negozio",
+  "greeting": "Ciao 👋",
+  "tagline": "Cosa ti va oggi?",
+  "logo": "",
+  "announcement": "Consegna gratuita sopra i 25€",
+  "currency": "€",
+  "delivery_fee": 2.5,
+  "free_delivery_over": 25,
+  "min_order": 10,
+  "delivery_time": "30–40 min",
+  "order_channel": "whatsapp",
+  "whatsapp": "393331234567",
+  "telegram": "",
+  "instagram": "iltuonegozio",
+  "phone": "+39 333 123 4567",
+  "email": "",
+  "address": "Via Roma 1, Milano",
+  "hours": "Lun–Dom 11:00–23:00",
+  "about": "Prodotti freschi preparati al momento e consegnati a casa tua.",
+  "footer": "© Il Tuo Negozio · Le immagini sono a scopo illustrativo"
+}

@@ -1,0 +1,152 @@
+# Pannello di gestione contenuti: https://<tuo-sito>/admin
+backend:
+  name: git-gateway
+  branch: main
+
+# Per modificare in locale senza login: `npm run cms` in un terminale e `npm start` in un altro,
+# poi apri http://localhost:8080/admin
+local_backend: true
+
+locale: "it"
+media_folder: "img/uploads"
+public_folder: "/img/uploads"
+
+collections:
+  # ---------------- PRODOTTI ----------------
+  - name: "products"
+    label: "Prodotti"
+    label_singular: "Prodotto"
+    folder: "src/products"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    sortable_fields: ["title", "category", "price", "order"]
+    view_groups:
+      - { label: "Categoria", field: "category" }
+    summary: "{{title}} — {{category}} — {{price}}"
+    fields:
+      - { label: "Nome", name: "title", widget: "string" }
+      - label: "Categoria"
+        name: "category"
+        widget: "relation"
+        collection: "categories"
+        search_fields: ["title"]
+        value_field: "title"
+        display_fields: ["title"]
+      - { label: "Sottotitolo breve", name: "subtitle", widget: "string", required: false, hint: "Es. ingredienti principali o formato" }
+      - { label: "Descrizione", name: "description", widget: "text", required: false }
+      - { label: "Foto", name: "image", widget: "image", required: false, choose_url: true }
+      - { label: "Prezzo", name: "price", widget: "number", value_type: "float", step: 0.01, min: 0 }
+      - { label: "Prezzo barrato (opzionale)", name: "old_price", widget: "number", value_type: "float", step: 0.01, required: false }
+      - { label: "Etichetta", name: "badge", widget: "string", required: false, hint: "Es. Bestseller, Novità, -15%" }
+      - { label: "In evidenza in home", name: "featured", widget: "boolean", default: false }
+      - { label: "Disponibile", name: "available", widget: "boolean", default: true, hint: "Se spento il prodotto resta visibile ma non ordinabile" }
+      - { label: "Visibile sul sito", name: "visible", widget: "boolean", default: true }
+      - { label: "Ordine", name: "order", widget: "number", value_type: "int", required: false, hint: "Numero più basso = mostrato prima" }
+      - label: "Varianti / formati (scelta singola)"
+        name: "variants"
+        widget: "list"
+        required: false
+        summary: "{{fields.name}} (+{{fields.price}})"
+        hint: "Il prezzo è un supplemento rispetto al prezzo base (0 per la variante base)"
+        fields:
+          - { label: "Nome", name: "name", widget: "string" }
+          - { label: "Supplemento", name: "price", widget: "number", value_type: "float", step: 0.01, default: 0 }
+      - label: "Extra (scelta multipla)"
+        name: "extras"
+        widget: "list"
+        required: false
+        summary: "{{fields.name}} (+{{fields.price}})"
+        fields:
+          - { label: "Nome", name: "name", widget: "string" }
+          - { label: "Prezzo", name: "price", widget: "number", value_type: "float", step: 0.01, default: 0 }
+
+  # ---------------- CATEGORIE ----------------
+  - name: "categories"
+    label: "Categorie"
+    label_singular: "Categoria"
+    folder: "src/categories"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{icon}} {{title}}"
+    fields:
+      - { label: "Nome", name: "title", widget: "string", hint: "Se lo rinomini, aggiorna anche la categoria dei prodotti collegati" }
+      - { label: "Icona (emoji)", name: "icon", widget: "string", required: false, hint: "Es. 🍕 — usata se non carichi un'immagine" }
+      - { label: "Immagine icona", name: "image", widget: "image", required: false }
+      - { label: "Ordine", name: "order", widget: "number", value_type: "int", required: false }
+      - { label: "Visibile", name: "visible", widget: "boolean", default: true }
+
+  # ---------------- OFFERTE ----------------
+  - name: "offers"
+    label: "Offerte"
+    label_singular: "Offerta"
+    folder: "src/offers"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    summary: "{{title}} — {{code}}"
+    fields:
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Sottotitolo", name: "subtitle", widget: "string", required: false }
+      - { label: "Codice promo", name: "code", widget: "string", required: false, hint: "Il cliente lo inserisce nel carrello. Lascia vuoto per un'offerta solo informativa" }
+      - { label: "Immagine", name: "image", widget: "image", required: false }
+      - label: "Colore"
+        name: "color"
+        widget: "select"
+        default: "orange"
+        options:
+          - { label: "Arancione", value: "orange" }
+          - { label: "Rosso", value: "red" }
+          - { label: "Verde", value: "green" }
+          - { label: "Viola", value: "purple" }
+          - { label: "Blu", value: "blue" }
+      - label: "Tipo di sconto"
+        name: "discount_type"
+        widget: "select"
+        default: "none"
+        options:
+          - { label: "Nessuno (solo banner)", value: "none" }
+          - { label: "Percentuale", value: "percent" }
+          - { label: "Importo fisso", value: "fixed" }
+          - { label: "Consegna gratuita", value: "free_delivery" }
+      - { label: "Valore sconto", name: "discount_value", widget: "number", value_type: "float", required: false, hint: "Es. 20 = 20% oppure 20€" }
+      - { label: "Sconto massimo", name: "max_discount", widget: "number", value_type: "float", required: false, hint: "Solo per sconti in percentuale. Es. 10 = massimo 10€ di sconto" }
+      - { label: "Ordine minimo", name: "min_order", widget: "number", value_type: "float", required: false }
+      - { label: "Attiva", name: "active", widget: "boolean", default: true }
+      - { label: "Ordine", name: "order", widget: "number", value_type: "int", required: false }
+
+  # ---------------- IMPOSTAZIONI ----------------
+  - name: "settings"
+    label: "Impostazioni"
+    editor: { preview: false }
+    files:
+      - name: "store"
+        label: "Negozio, contatti e consegna"
+        file: "src/_data/settings.json"
+        fields:
+          - { label: "Nome negozio", name: "store_name", widget: "string" }
+          - { label: "Logo", name: "logo", widget: "image", required: false }
+          - { label: "Saluto in home", name: "greeting", widget: "string", required: false }
+          - { label: "Frase in home", name: "tagline", widget: "string", required: false }
+          - { label: "Avviso in evidenza", name: "announcement", widget: "string", required: false, hint: "Barra in alto in home. Lascia vuoto per nasconderla" }
+          - { label: "Chi siamo", name: "about", widget: "text", required: false }
+          - { label: "Valuta", name: "currency", widget: "string", default: "€" }
+          - { label: "Costo consegna", name: "delivery_fee", widget: "number", value_type: "float", step: 0.01 }
+          - { label: "Consegna gratuita sopra", name: "free_delivery_over", widget: "number", value_type: "float", required: false, hint: "0 = mai gratuita" }
+          - { label: "Ordine minimo", name: "min_order", widget: "number", value_type: "float", required: false }
+          - { label: "Tempo di consegna", name: "delivery_time", widget: "string", required: false }
+          - label: "Dove arrivano gli ordini"
+            name: "order_channel"
+            widget: "select"
+            options:
+              - { label: "WhatsApp", value: "whatsapp" }
+              - { label: "Telegram", value: "telegram" }
+          - { label: "Numero WhatsApp", name: "whatsapp", widget: "string", required: false, hint: "Formato internazionale senza + né spazi, es. 393331234567" }
+          - { label: "Username Telegram", name: "telegram", widget: "string", required: false, hint: "Senza @" }
+          - { label: "Instagram", name: "instagram", widget: "string", required: false, hint: "Senza @" }
+          - { label: "Telefono", name: "phone", widget: "string", required: false }
+          - { label: "Email", name: "email", widget: "string", required: false }
+          - { label: "Indirizzo", name: "address", widget: "string", required: false }
+          - { label: "Orari", name: "hours", widget: "string", required: false }
+          - { label: "Testo footer", name: "footer", widget: "string", required: false }
