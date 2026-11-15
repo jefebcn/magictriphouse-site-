@@ -1,12 +1,13 @@
 ---
+placement: "list"
+label: "Consegna"
 title: "Consegna gratuita"
-subtitle: "Sugli ordini sopra i 15€"
+title_highlight: ""
+subtitle: "Sugli ordini sopra i 15€ con il codice FREE15"
 code: "FREE15"
-image: ""
-color: "purple"
 discount_type: "free_delivery"
-discount_value: 0
 min_order: 15
+icon: "🛵"
+order: 5
 active: true
-order: 3
 ---

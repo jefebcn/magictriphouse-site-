@@ -10,6 +10,8 @@
   const PRODUCTS = DATA.products || [];
   const CATEGORIES = DATA.categories || [];
   const OFFERS = DATA.offers || [];
+  const HERO = OFFERS.filter((o) => o.placement === "hero");
+  const BANNERS = OFFERS.filter((o) => o.placement === "banner");
   const app = document.getElementById("app");
 
   // ---------- Utils ----------
@@ -22,6 +24,7 @@
   const catOf = (p) => CATEGORIES.find((c) => c.title === p.category);
   const catById = (id) => CATEGORIES.find((c) => c.id === id);
   const productsIn = (cat) => PRODUCTS.filter((p) => p.category === cat.title);
+  const enc = encodeURIComponent;
 
   const store = {
     get(key, fallback) {
@@ -43,14 +46,20 @@
   // ---------- Icons ----------
   const I = {
     back: '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>',
+    burger: '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>',
+    close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    bell: '<svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+    cart: '<svg viewBox="0 0 24 24"><path d="M3 4h2l2.2 10.5a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg>',
     heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-8.8C1.6 7.9 3.8 4.5 7.2 4.5c2 0 3.4 1.1 4.8 2.8 1.4-1.7 2.8-2.8 4.8-2.8 3.4 0 5.6 3.4 4.2 6.7C19 15.6 12 20 12 20z"/></svg>',
     share: '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>',
     plus: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
     minus: '<svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>',
+    arrow: '<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
     trash: '<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
     search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
-    sliders: '<svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>',
+    sliders: '<svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    star: '<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>',
     clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
     bike: '<svg viewBox="0 0 24 24"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17 9 9h5l4.5 8M9 9 8 6H6M14 9l-2 5H8"/></svg>',
     pin: '<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
@@ -62,8 +71,10 @@
     tag: '<svg viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
     copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>',
     chev: '<svg class="chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
-    info: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h0"/></svg>',
-    bag: '<svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
+    bag: '<svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>',
+    home: '<svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>',
+    grid: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>',
+    user: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
   };
 
   // ---------- Pricing ----------
@@ -95,9 +106,8 @@
       else if (offer.discount_type === "percent") {
         discount = (subtotal * offer.discount_value) / 100;
         if (offer.max_discount > 0) discount = Math.min(discount, offer.max_discount);
-      }
-      else if (offer.discount_type === "fixed") discount = Math.min(offer.discount_value, subtotal);
-      else if (offer.discount_type === "free_delivery") { discount = 0; delivery = 0; }
+      } else if (offer.discount_type === "fixed") discount = Math.min(offer.discount_value, subtotal);
+      else if (offer.discount_type === "free_delivery") delivery = 0;
       if (promoError) offer = null;
     }
     discount = Math.round(discount * 100) / 100;
@@ -114,7 +124,7 @@
     if (line) line.qty += qty;
     else cart.push({ key, id, variant, extras, qty });
     save();
-    updateBadge();
+    updateBadges();
     toast("Aggiunto al carrello");
   }
 
@@ -127,67 +137,116 @@
   }
 
   // ---------- UI pieces ----------
+  const emojiFor = (p) => (p && catOf(p) && catOf(p).icon) || "🍽️";
+
   function thumb(p, cls = "") {
-    const c = p && catOf(p);
     const badge = p && !p.available ? '<span class="badge off">Esaurito</span>' : p && p.badge ? `<span class="badge">${esc(p.badge)}</span>` : "";
     if (p && p.image)
       return `<div class="thumb ${cls}">${badge}<img src="${esc(p.image)}" alt="${esc(p.title)}" loading="lazy"></div>`;
-    return `<div class="thumb fallback ${cls}">${badge}<span class="emoji" aria-hidden="true">${esc((c && c.icon) || "🍽️")}</span></div>`;
+    return `<div class="thumb fallback ${cls}">${badge}<span class="emoji" aria-hidden="true">${esc(emojiFor(p))}</span></div>`;
   }
 
   const priceTag = (p) => `<span class="price">${money(p.price)}${p.old_price > p.price ? `<s>${money(p.old_price)}</s>` : ""}</span>`;
 
+  const rating = (p) =>
+    p.rating ? `<span class="rating">${I.star}${esc(String(p.rating).replace(".", ","))}${p.reviews ? ` <small>(${esc(p.reviews)})</small>` : ""}</span>` : "";
+
   const heartBtn = (p) =>
     `<button class="heart ${favs.includes(p.id) ? "active" : ""}" data-action="fav" data-id="${esc(p.id)}" aria-label="Preferito" aria-pressed="${favs.includes(p.id)}">${I.heart}</button>`;
 
+  const addBtn = (p) =>
+    `<button class="add-btn" data-action="quick-add" data-id="${esc(p.id)}" aria-label="Aggiungi ${esc(p.title)}" ${p.available ? "" : "disabled"}>${I.plus}</button>`;
+
   const card = (p) => `
     <article class="pcard">
-      <a href="#/product/${encodeURIComponent(p.id)}" aria-label="${esc(p.title)}">${thumb(p)}</a>
+      <a href="#/product/${enc(p.id)}" aria-label="${esc(p.title)}">${thumb(p)}</a>
       ${heartBtn(p)}
-      <a class="body" href="#/product/${encodeURIComponent(p.id)}">
+      <a class="body" href="#/product/${enc(p.id)}">
         <h4>${esc(p.title)}</h4>
-        <span class="sub">${esc(p.subtitle || p.category)}</span>
-        <div class="foot">
-          ${priceTag(p)}
-          <button class="add-btn" data-action="quick-add" data-id="${esc(p.id)}" aria-label="Aggiungi ${esc(p.title)}" ${p.available ? "" : "disabled"}>${I.plus}</button>
-        </div>
+        ${rating(p) || `<span class="sub">${esc(p.subtitle || p.category)}</span>`}
+        <div class="foot">${priceTag(p)}${addBtn(p)}</div>
       </a>
     </article>`;
 
   const row = (p, opts = {}) => `
     <article class="prow">
-      <a href="#/product/${encodeURIComponent(p.id)}">${thumb(p)}</a>
-      <a class="info" href="#/product/${encodeURIComponent(p.id)}">
+      <a href="#/product/${enc(p.id)}">${thumb(p)}</a>
+      <a class="info" href="#/product/${enc(p.id)}">
+        ${p.badge && p.available ? `<span class="tag">${esc(p.badge)}</span>` : ""}
         <h4>${esc(p.title)}</h4>
         <span class="sub">${esc(p.subtitle || p.category)}</span>
-        ${p.badge && p.available ? `<span class="tag">${esc(p.badge)}</span>` : ""}
-        <span style="margin-top:4px">${priceTag(p)}</span>
+        ${rating(p)}
+        <span style="margin-top:2px">${priceTag(p)}</span>
       </a>
       ${opts.fav ? `<button class="row-heart" data-action="fav" data-id="${esc(p.id)}" aria-label="Rimuovi dai preferiti">${I.heart}</button>` : ""}
-      <button class="add-btn" data-action="quick-add" data-id="${esc(p.id)}" aria-label="Aggiungi ${esc(p.title)}" ${p.available ? "" : "disabled"}>${I.plus}</button>
+      ${addBtn(p)}
     </article>`;
 
-  const offerCard = (o) => `
-    <div class="offer ${esc(o.color)} ${o.image ? "has-img" : ""}">
-      ${o.image ? `<img class="offer-bg" src="${esc(o.image)}" alt="" loading="lazy">` : ""}
-      <h3>${esc(o.title)}</h3>
-      ${o.subtitle ? `<p>${esc(o.subtitle)}</p>` : ""}
-      ${o.code ? `<button class="code" data-action="copy-code" data-code="${esc(o.code)}">${I.copy} ${esc(o.code)}</button>` : ""}
-    </div>`;
+  const offerLink = (o) => (o.product && byId(o.product) ? `#/product/${enc(o.product)}` : "#/menu");
+  const offerArt = (o) => {
+    if (o.image) return `<img src="${esc(o.image)}" alt="" loading="lazy">`;
+    const p = o.product && byId(o.product);
+    return `<span class="emoji" aria-hidden="true">${esc(o.icon || (p ? emojiFor(p) : "🍔"))}</span>`;
+  };
+  const codeBtn = (o) => (o.code ? `<button class="code" data-action="copy-code" data-code="${esc(o.code)}">${I.copy} ${esc(o.code)}</button>` : "");
+
+  const slide = (o) => `
+    <article class="slide ${o.image ? "has-img" : ""}">
+      <div class="copy">
+        ${o.label ? `<span class="pill-label">${esc(o.label)}</span>` : ""}
+        <h2>${esc(o.title)}${o.title_highlight ? `<em>${esc(o.title_highlight)}</em>` : ""}</h2>
+        ${o.subtitle ? `<p>${esc(o.subtitle)}</p>` : ""}
+        ${o.code && !o.cta_text ? `<div style="margin-top:12px">${codeBtn(o)}</div>` : ""}
+        <a class="cta" href="${offerLink(o)}">${esc(o.cta_text || "Ordina ora")}<i>${I.arrow}</i></a>
+      </div>
+      <div class="art">${offerArt(o)}</div>
+    </article>`;
+
+  const promoBanner = (o) => `
+    <article class="promo-banner">
+      <a class="copy" href="${offerLink(o)}">
+        ${o.label ? `<div class="eyebrow">${esc(o.label)}</div>` : ""}
+        <h3>${esc(o.title)}${o.title_highlight ? `<span>${esc(o.title_highlight)}</span>` : ""}</h3>
+        ${o.subtitle ? `<p>${esc(o.subtitle)}</p>` : ""}
+        ${codeBtn(o)}
+      </a>
+      ${o.badge_text ? `<div class="save-badge">${badgeHtml(o.badge_text)}</div>` : "<span></span>"}
+      <a class="art" href="${offerLink(o)}" tabindex="-1" aria-hidden="true">${offerArt(o)}</a>
+    </article>`;
+
+  // "SAVE 20%" -> SAVE / 20% in grande
+  const badgeHtml = (t) => {
+    const m = String(t).match(/^(.*?)(\S*\d\S*)$/);
+    return m ? `${esc(m[1].trim())}<b>${esc(m[2])}</b>` : `<b>${esc(t)}</b>`;
+  };
 
   const catIcon = (c) => (c.image ? `<img src="${esc(c.image)}" alt="" loading="lazy">` : esc(c.icon || "🍽️"));
 
-  const brandBadge = () =>
-    S.logo ? `<span class="brand-badge"><img src="${esc(S.logo)}" alt="${esc(S.store_name)}"></span>` : `<span class="brand-badge">${esc((S.store_name || "?").trim().charAt(0).toUpperCase())}</span>`;
+  const logoHtml = () => `
+    <span class="logo">
+      ${S.logo ? `<img src="${esc(S.logo)}" alt="">` : S.logo_icon ? `<span class="mark" aria-hidden="true">${esc(S.logo_icon)}</span>` : ""}
+      <span class="name">${esc(S.store_name)}</span>
+      ${S.subtitle ? `<span class="sub">${esc(S.subtitle)}</span>` : ""}
+    </span>`;
+
+  const appbar = () => `
+    <header class="appbar">
+      <div class="left"><button class="bar-btn" data-action="drawer" aria-label="Apri menu">${I.burger}</button></div>
+      <a href="#/" aria-label="${esc(S.store_name)}">${logoHtml()}</a>
+      <div class="right">
+        <a class="bar-btn" href="#/offers" aria-label="Offerte">${I.bell}${OFFERS.length ? `<b class="dot-badge">${OFFERS.length}</b>` : ""}</a>
+        <a class="bar-btn" href="#/cart" aria-label="Carrello">${I.cart}<b class="dot-badge" data-cart-badge hidden>0</b></a>
+      </div>
+    </header>`;
 
   const topbar = (title, right = "") => `
-    <header class="topbar center">
+    <header class="topbar">
       <button class="icon-btn" data-action="back" aria-label="Indietro">${I.back}</button>
       <div class="title">${esc(title)}</div>
       ${right || '<span class="icon-btn ghost"></span>'}
     </header>`;
 
-  const empty = (emoji, title, text, cta = '<a class="btn" href="#/">Vai al menu</a>') => `
+  const empty = (emoji, title, text, cta = '<a class="btn" href="#/menu">Vai al menu</a>') => `
     <div class="empty"><div class="big">${emoji}</div><h2>${esc(title)}</h2><p>${esc(text)}</p>${cta}</div>`;
 
   // ---------- Views ----------
@@ -195,47 +254,40 @@
     const featured = PRODUCTS.filter((p) => p.featured);
     return `
       <div class="screen">
-        <header class="hello">
-          <div>
-            <small>${esc(S.greeting || "Ciao 👋")}</small>
-            <h1>${esc(S.tagline || S.store_name)}</h1>
-          </div>
-          <a href="#/info" aria-label="Info negozio">${brandBadge()}</a>
-        </header>
+        ${appbar()}
 
         <div class="searchbar">
-          <a class="field" href="#/search">${I.search}<span>Cerca prodotti, categorie…</span></a>
-          <a class="filter-btn" href="#/search" aria-label="Filtri">${I.sliders}</a>
+          <a class="field" href="#/search">${I.search}<span>${esc(S.search_placeholder || "Cerca il tuo piatto preferito…")}</span></a>
+          <a class="filter-btn" href="#/menu" aria-label="Filtri">${I.sliders}</a>
         </div>
 
         ${S.announcement ? `<div class="announce">${I.bike}<span>${esc(S.announcement)}</span></div>` : ""}
 
-        ${CATEGORIES.length ? `
-        <section class="section">
-          <div class="section-head"><h2 class="section-title">Categorie</h2><a class="link" href="#/search">Vedi tutte</a></div>
-          <div class="cats">
-            ${CATEGORIES.map((c) => `<a class="cat" href="#/category/${encodeURIComponent(c.id)}"><span class="cat-icon">${catIcon(c)}</span><span class="cat-label">${esc(c.title)}</span></a>`).join("")}
-          </div>
+        ${HERO.length ? `
+        <section class="hero" aria-roledescription="carosello" aria-label="In evidenza">
+          <div class="hero-track" id="heroTrack">${HERO.map(slide).join("")}</div>
+          ${HERO.length > 1 ? `<div class="dots" id="heroDots">${HERO.map((_, i) => `<button aria-label="Slide ${i + 1}" data-action="slide" data-i="${i}" class="${i ? "" : "active"}"></button>`).join("")}</div>` : ""}
         </section>` : ""}
 
-        ${OFFERS.length ? `
-        <section class="section">
-          <div class="section-head"><h2 class="section-title">Offerte</h2><a class="link" href="#/offers">Vedi tutte</a></div>
-          <div class="hscroll">${OFFERS.map(offerCard).join("")}</div>
-        </section>` : ""}
+        ${CATEGORIES.length ? `
+        <nav class="cats" aria-label="Categorie">
+          ${CATEGORIES.map((c, i) => `<a class="cat" href="#/category/${enc(c.id)}"><span class="cat-icon ${i === 0 ? "lead" : ""}">${catIcon(c)}</span><span class="cat-label">${esc(c.title)}</span></a>`).join("")}
+        </nav>` : ""}
 
         ${featured.length ? `
         <section class="section">
-          <div class="section-head"><h2 class="section-title">In evidenza</h2></div>
+          <div class="section-head"><h2 class="section-title">${esc(S.featured_title || "Più amati")}</h2><a class="link" href="#/menu">Vedi tutti ${I.arrow}</a></div>
           <div class="hscroll">${featured.map(card).join("")}</div>
         </section>` : ""}
+
+        ${BANNERS.length ? `<section class="section promo-list">${BANNERS.map(promoBanner).join("")}</section>` : ""}
 
         ${CATEGORIES.map((c) => {
           const items = productsIn(c);
           if (!items.length) return "";
           return `
-          <section class="section" id="sec-${esc(c.id)}">
-            <div class="section-head"><h2 class="section-title">${esc(c.icon)} ${esc(c.title)}</h2><a class="link" href="#/category/${encodeURIComponent(c.id)}">Vedi tutti</a></div>
+          <section class="section">
+            <div class="section-head"><h2 class="section-title">${esc(c.title)}</h2><a class="link" href="#/category/${enc(c.id)}">Vedi tutti ${I.arrow}</a></div>
             <div class="grid">${items.map(card).join("")}</div>
           </section>`;
         }).join("")}
@@ -245,46 +297,39 @@
       </div>`;
   }
 
-  let searchState = { q: "", cat: "" };
+  let menuState = { q: "", cat: "" };
 
-  function searchResults() {
-    const q = norm(searchState.q);
+  function menuResults() {
+    const q = norm(menuState.q);
     const list = PRODUCTS.filter((p) => {
-      if (searchState.cat && p.category !== searchState.cat) return false;
+      if (menuState.cat && p.category !== menuState.cat) return false;
       if (!q) return true;
       return norm([p.title, p.subtitle, p.description, p.category, p.badge].join(" ")).includes(q);
     });
     if (!list.length) return empty("🔎", "Nessun risultato", "Prova con un'altra parola o categoria.", "");
-    return `<p class="muted" style="margin:0 0 10px;font-size:13px">${list.length} ${list.length === 1 ? "prodotto" : "prodotti"}</p><div class="rows two">${list.map((p) => row(p)).join("")}</div>`;
+    if (!q && !menuState.cat)
+      return CATEGORIES.map((c) => {
+        const items = list.filter((p) => p.category === c.title);
+        return items.length ? `<section class="section"><div class="section-head"><h2 class="section-title">${esc(c.icon)} ${esc(c.title)}</h2></div><div class="grid">${items.map(card).join("")}</div></section>` : "";
+      }).join("");
+    return `<p class="muted" style="margin:0 0 10px;font-size:13px">${list.length} ${list.length === 1 ? "prodotto" : "prodotti"}</p><div class="grid">${list.map(card).join("")}</div>`;
   }
 
-  function viewSearch(params) {
-    searchState = { q: params.get("q") || searchState.q || "", cat: params.has("cat") ? params.get("cat") : searchState.cat };
+  function viewMenu(params, catId) {
+    const c = catId && catById(catId);
+    if (catId && !c) return viewNotFound();
+    menuState = { q: params.get("q") || "", cat: c ? c.title : "" };
     return `
       <div class="screen">
-        ${topbar("Cerca")}
+        ${topbar(c ? c.title : "Menu")}
         <div class="searchbar">
-          <label class="field">${I.search}<input id="searchInput" type="search" placeholder="Cerca prodotti, categorie…" value="${esc(searchState.q)}" autocomplete="off" enterkeyhint="search"></label>
+          <label class="field">${I.search}<input id="searchInput" type="search" placeholder="${esc(S.search_placeholder || "Cerca il tuo piatto preferito…")}" value="${esc(menuState.q)}" autocomplete="off" enterkeyhint="search"></label>
         </div>
-        <div class="chips" role="tablist">
-          <button class="chip ${!searchState.cat ? "active" : ""}" data-action="filter-cat" data-cat="">Tutti</button>
-          ${CATEGORIES.map((c) => `<button class="chip ${searchState.cat === c.title ? "active" : ""}" data-action="filter-cat" data-cat="${esc(c.title)}">${esc(c.icon)} ${esc(c.title)}</button>`).join("")}
-        </div>
-        <div id="results">${searchResults()}</div>
-      </div>`;
-  }
-
-  function viewCategory(id) {
-    const c = catById(id);
-    if (!c) return viewNotFound();
-    const items = productsIn(c);
-    return `
-      <div class="screen">
-        ${topbar(`${c.icon || ""} ${c.title}`)}
         <div class="chips">
-          ${CATEGORIES.map((x) => `<a class="chip ${x.id === c.id ? "active" : ""}" href="#/category/${encodeURIComponent(x.id)}">${esc(x.icon)} ${esc(x.title)}</a>`).join("")}
+          <button class="chip ${!menuState.cat ? "active" : ""}" data-action="filter-cat" data-cat="">Tutto</button>
+          ${CATEGORIES.map((x) => `<button class="chip ${menuState.cat === x.title ? "active" : ""}" data-action="filter-cat" data-cat="${esc(x.title)}">${esc(x.icon)} ${esc(x.title)}</button>`).join("")}
         </div>
-        ${items.length ? `<div class="grid">${items.map(card).join("")}</div>` : empty(c.icon || "🍽️", "Nessun prodotto", "Questa categoria è ancora vuota.")}
+        <div id="results">${menuResults()}</div>
       </div>`;
   }
 
@@ -309,13 +354,15 @@
             ${thumb(p)}
           </div>
           <div class="detail-body">
+            ${p.badge && p.available ? `<span class="pill-label">${esc(p.badge)}</span>` : ""}
             <h1>${esc(p.title)}</h1>
             <div class="detail-meta">
-              ${c ? `<a class="pill" href="#/category/${encodeURIComponent(c.id)}">${esc(c.icon)} ${esc(c.title)}</a>` : ""}
+              ${rating(p)}
+              ${c ? `<a class="pill" href="#/category/${enc(c.id)}">${esc(c.icon)} ${esc(c.title)}</a>` : ""}
               ${p.available ? `<span class="pill ok">${I.check} Disponibile</span>` : `<span class="pill no">Esaurito</span>`}
               ${S.delivery_time ? `<span class="pill">${I.clock} ${esc(S.delivery_time)}</span>` : ""}
             </div>
-            <div style="margin-bottom:12px;font-size:22px">${priceTag(p)}</div>
+            <div style="margin-bottom:12px;font-size:24px">${priceTag(p)}</div>
             ${p.description ? `<p class="desc">${esc(p.description)}</p>` : p.subtitle ? `<p class="desc">${esc(p.subtitle)}</p>` : ""}
 
             ${p.variants.length ? `
@@ -351,7 +398,7 @@
             <button class="plus" data-action="d-inc" aria-label="Aumenta">${I.plus}</button>
           </div>
           <button class="btn" data-action="d-add" ${p.available ? "" : "disabled"}>
-            ${p.available ? `Aggiungi <span class="sum" id="dSum">· ${money(p.price)}</span>` : "Non disponibile"}
+            ${p.available ? `Aggiungi <span id="dSum">· ${money(p.price)}</span>` : "Non disponibile"}
           </button>
         </div></div>
       </div>`;
@@ -370,7 +417,10 @@
     return `
       <div class="screen">
         ${topbar("Offerte")}
-        ${OFFERS.length ? `<div class="offers-list">${OFFERS.map(offerCard).join("")}</div>
+        ${OFFERS.length ? `
+          <div class="offers-list">
+            ${OFFERS.map((o) => (o.placement === "banner" ? promoBanner(o) : slide(o))).join("")}
+          </div>
           <p class="hint" style="text-align:center;margin-top:16px">Tocca un codice per copiarlo e inseriscilo nel carrello.</p>`
           : empty("🏷️", "Nessuna offerta attiva", "Torna a trovarci presto!")}
       </div>`;
@@ -388,7 +438,7 @@
 
   function viewCart() {
     if (!cart.length)
-      return `<div class="screen">${topbar("Il tuo ordine")}${empty("🛒", "Il carrello è vuoto", "Aggiungi qualcosa di buono dal menu.")}</div>`;
+      return `<div class="screen narrow">${topbar("Il tuo ordine")}${empty("🛒", "Il carrello è vuoto", "Aggiungi qualcosa di buono dal menu.")}</div>`;
     const t = totals();
     const freeLeft = !t.pickup && S.free_delivery_over > 0 && t.subtotal < S.free_delivery_over ? S.free_delivery_over - t.subtotal : 0;
     return `
@@ -410,7 +460,7 @@
               <div class="info">
                 <h4>${esc(p.title)}</h4>
                 ${opts ? `<div class="opts">${esc(opts)}</div>` : ""}
-                <div class="price" style="font-size:14px">${money(unitPrice(p, i.variant, i.extras) * i.qty)}</div>
+                <div class="price" style="font-size:14.5px">${money(unitPrice(p, i.variant, i.extras) * i.qty)}</div>
               </div>
               <div class="qty sm">
                 <button data-action="c-dec" data-key="${esc(i.key)}" aria-label="Diminuisci">${i.qty > 1 ? I.minus : I.trash}</button>
@@ -419,7 +469,7 @@
               </div>
             </div>`;
           }).join("")}
-          <a class="link" href="#/" style="display:inline-block;margin-top:12px">+ Aggiungi altri prodotti</a>
+          <a class="link orange" href="#/menu" style="margin-top:12px">${I.plus} Aggiungi altri prodotti</a>
         </div>
 
         <div class="card">
@@ -440,25 +490,22 @@
           ${t.pickup && S.address ? `<p class="hint">Ritiro presso: ${esc(S.address)}</p>` : ""}
         </div>
 
-        <div class="card totals" id="totals">${totalsHtml(t, freeLeft)}</div>
+        <div class="card totals">
+          <div class="line"><span>Subtotale</span><b>${money(t.subtotal)}</b></div>
+          ${!t.pickup ? `<div class="line"><span>Consegna</span><b>${t.delivery ? money(t.delivery) : "Gratis"}</b></div>` : ""}
+          ${t.discount ? `<div class="line discount"><span>Sconto</span><b>−${money(t.discount)}</b></div>` : ""}
+          <div class="line total"><span>Totale</span><b>${money(t.total)}</b></div>
+          ${freeLeft ? `<p class="hint">Aggiungi ancora ${money(freeLeft)} per la consegna gratuita</p>` : ""}
+          ${t.belowMin ? `<p class="hint warn">Ordine minimo per la consegna: ${money(S.min_order)}</p>` : ""}
+        </div>
 
         <div class="actionbar"><div class="inner">
           <button class="btn" data-action="send-order" ${t.belowMin ? "disabled" : ""}>
             ${S.order_channel === "telegram" ? I.send : I.chat}
-            <span>Invia ordine</span><span class="spacer"></span><span class="sum">${money(t.total)}</span>
+            <span>Invia ordine</span><span class="spacer"></span><span>${money(t.total)}</span>
           </button>
         </div></div>
       </div>`;
-  }
-
-  function totalsHtml(t, freeLeft) {
-    return `
-      <div class="line"><span>Subtotale</span><b>${money(t.subtotal)}</b></div>
-      ${!t.pickup ? `<div class="line"><span>Consegna</span><b>${t.delivery ? money(t.delivery) : "Gratis"}</b></div>` : ""}
-      ${t.discount ? `<div class="line discount"><span>Sconto</span><b>−${money(t.discount)}</b></div>` : ""}
-      <div class="line total"><span>Totale</span><b>${money(t.total)}</b></div>
-      ${freeLeft ? `<p class="hint">Aggiungi ancora ${money(freeLeft)} per la consegna gratuita</p>` : ""}
-      ${t.belowMin ? `<p class="hint warn">Ordine minimo per la consegna: ${money(S.min_order)}</p>` : ""}`;
   }
 
   function viewDone() {
@@ -485,49 +532,118 @@
       </div>`;
   }
 
+  const menuItem = (m) => {
+    const inner = `<span class="ic">${m.ic}</span><span class="tx">${esc(m.t)}${m.s ? `<small>${esc(m.s)}</small>` : ""}</span>${m.href ? I.chev : ""}`;
+    const ext = m.href && /^https?:/.test(m.href) ? ' target="_blank" rel="noopener"' : "";
+    return m.href ? `<a class="menu-item" href="${esc(m.href)}"${ext}>${inner}</a>` : `<div class="menu-item">${inner}</div>`;
+  };
+
+  function contactItems() {
+    const list = [];
+    if (S.phone) list.push({ ic: I.phone, t: "Telefono", s: S.phone, href: "tel:" + S.phone.replace(/\s+/g, "") });
+    if (S.whatsapp) list.push({ ic: I.chat, t: "WhatsApp", s: "Scrivici", href: "https://wa.me/" + S.whatsapp.replace(/\D/g, "") });
+    if (S.telegram) list.push({ ic: I.send, t: "Telegram", s: "@" + S.telegram.replace(/^@/, ""), href: "https://t.me/" + S.telegram.replace(/^@/, "") });
+    if (S.instagram) list.push({ ic: I.insta, t: "Instagram", s: "@" + S.instagram.replace(/^@/, ""), href: "https://instagram.com/" + S.instagram.replace(/^@/, "") });
+    if (S.email) list.push({ ic: I.mail, t: "Email", s: S.email, href: "mailto:" + S.email });
+    return list;
+  }
+
   function viewInfo() {
     const items = [];
     if (S.hours) items.push({ ic: I.clock, t: "Orari", s: S.hours });
-    if (S.address) items.push({ ic: I.pin, t: "Indirizzo", s: S.address, href: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(S.address) });
+    if (S.address) items.push({ ic: I.pin, t: "Indirizzo", s: S.address, href: "https://www.google.com/maps/search/?api=1&query=" + enc(S.address) });
     if (S.delivery_time) items.push({ ic: I.bike, t: "Consegna", s: `${S.delivery_time} · ${S.delivery_fee ? money(S.delivery_fee) : "gratis"}${S.free_delivery_over ? ` · gratis da ${money(S.free_delivery_over)}` : ""}` });
-    const contacts = [];
-    if (S.phone) contacts.push({ ic: I.phone, t: "Telefono", s: S.phone, href: "tel:" + S.phone.replace(/\s+/g, "") });
-    if (S.whatsapp) contacts.push({ ic: I.chat, t: "WhatsApp", s: "Scrivici", href: "https://wa.me/" + S.whatsapp.replace(/\D/g, "") });
-    if (S.telegram) contacts.push({ ic: I.send, t: "Telegram", s: "@" + S.telegram.replace(/^@/, ""), href: "https://t.me/" + S.telegram.replace(/^@/, "") });
-    if (S.instagram) contacts.push({ ic: I.insta, t: "Instagram", s: "@" + S.instagram.replace(/^@/, ""), href: "https://instagram.com/" + S.instagram.replace(/^@/, "") });
-    if (S.email) contacts.push({ ic: I.mail, t: "Email", s: S.email, href: "mailto:" + S.email });
-
-    const menuItem = (m) => {
-      const inner = `<span class="ic">${m.ic}</span><span class="tx">${esc(m.t)}<small>${esc(m.s)}</small></span>${m.href ? I.chev : ""}`;
-      const ext = m.href && /^https?:/.test(m.href) ? ' target="_blank" rel="noopener"' : "";
-      return m.href ? `<a class="menu-item" href="${esc(m.href)}"${ext}>${inner}</a>` : `<div class="menu-item">${inner}</div>`;
-    };
-
+    const contacts = contactItems();
     return `
       <div class="screen narrow">
-        ${topbar("Info")}
+        ${topbar("Profilo")}
         <div class="profile">
-          ${brandBadge()}
+          <div class="avatar">${S.logo ? `<img src="${esc(S.logo)}" alt="">` : esc(S.logo_icon || (S.store_name || "?").charAt(0))}</div>
           <h2>${esc(S.store_name)}</h2>
           ${S.about ? `<p>${esc(S.about)}</p>` : ""}
         </div>
         <div class="stats">
           <div><b>${PRODUCTS.length}</b><span>Prodotti</span></div>
-          <div><b>${CATEGORIES.length}</b><span>Categorie</span></div>
+          <div><b>${totals().count}</b><span>Nel carrello</span></div>
           <div><b>${favs.length}</b><span>Preferiti</span></div>
         </div>
-        ${items.length ? `<div class="menu">${items.map(menuItem).join("")}</div>` : ""}
-        ${contacts.length ? `<p class="card-title" style="margin:18px 4px 8px">Contatti</p><div class="menu">${contacts.map(menuItem).join("")}</div>` : ""}
         <div class="menu">
-          ${menuItem({ ic: I.tag, t: "Offerte e codici promo", s: OFFERS.length ? `${OFFERS.length} attive` : "Nessuna al momento", href: "#/offers" })}
           ${menuItem({ ic: I.heart, t: "I miei preferiti", s: `${favs.length} salvati`, href: "#/favorites" })}
-          ${menuItem({ ic: I.bag, t: "Carrello", s: `${totals().count} articoli`, href: "#/cart" })}
+          ${menuItem({ ic: I.tag, t: "Offerte e codici promo", s: OFFERS.length ? `${OFFERS.length} attive` : "Nessuna al momento", href: "#/offers" })}
+          ${menuItem({ ic: I.bag, t: "Il mio ordine", s: `${totals().count} articoli`, href: "#/cart" })}
         </div>
+        ${items.length ? `<p class="card-title" style="margin:18px 4px 8px">Il locale</p><div class="menu">${items.map(menuItem).join("")}</div>` : ""}
+        ${contacts.length ? `<p class="card-title" style="margin:18px 4px 8px">Contatti</p><div class="menu">${contacts.map(menuItem).join("")}</div>` : ""}
         ${S.footer ? `<p class="footer-note">${esc(S.footer)}</p>` : ""}
       </div>`;
   }
 
   const viewNotFound = () => `<div class="screen">${topbar("")}${empty("🤷", "Pagina non trovata", "Il contenuto che cerchi non esiste più.")}</div>`;
+
+  // ---------- Drawer ----------
+  const drawer = document.getElementById("drawer");
+  function renderDrawer() {
+    drawer.innerHTML = `
+      <div class="scrim" data-action="drawer-close"></div>
+      <aside class="panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <div class="panel-head">
+          ${logoHtml()}
+          <button class="icon-btn" data-action="drawer-close" aria-label="Chiudi menu">${I.close}</button>
+        </div>
+        <div class="menu">
+          ${menuItem({ ic: I.home, t: "Home", href: "#/" })}
+          ${menuItem({ ic: I.grid, t: "Menu completo", href: "#/menu" })}
+          ${menuItem({ ic: I.tag, t: "Offerte", href: "#/offers" })}
+          ${menuItem({ ic: I.heart, t: "Preferiti", href: "#/favorites" })}
+          ${menuItem({ ic: I.bag, t: "Il mio ordine", href: "#/cart" })}
+          ${menuItem({ ic: I.user, t: "Info e contatti", href: "#/info" })}
+        </div>
+        ${CATEGORIES.length ? `<p class="card-title" style="margin:18px 4px 8px">Categorie</p>
+        <div class="menu">${CATEGORIES.map((c) => menuItem({ ic: `<span style="font-size:19px">${esc(c.icon || "🍽️")}</span>`, t: c.title, s: `${productsIn(c).length} prodotti`, href: `#/category/${enc(c.id)}` })).join("")}</div>` : ""}
+        ${S.hours ? `<p class="hint" style="text-align:center;margin-top:18px">${esc(S.hours)}</p>` : ""}
+      </aside>`;
+  }
+  let lastFocus = null;
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    drawer.classList.add("open");
+    drawer.removeAttribute("inert");
+    document.body.classList.add("no-scroll");
+    const btn = drawer.querySelector(".panel .icon-btn");
+    if (btn) btn.focus();
+  }
+  function closeDrawer() {
+    if (!drawer.classList.contains("open")) return;
+    drawer.classList.remove("open");
+    drawer.setAttribute("inert", "");
+    document.body.classList.remove("no-scroll");
+    if (lastFocus) lastFocus.focus();
+  }
+
+  // ---------- Hero carousel ----------
+  let heroTimer = null;
+  function setupHero() {
+    clearInterval(heroTimer);
+    const track = document.getElementById("heroTrack");
+    const dots = document.getElementById("heroDots");
+    if (!track || !dots) return;
+    const n = HERO.length;
+    const current = () => Math.round(track.scrollLeft / track.clientWidth);
+    track.addEventListener("scroll", () => {
+      const i = current();
+      dots.querySelectorAll("button").forEach((b, j) => b.classList.toggle("active", i === j));
+    }, { passive: true });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const start = () => {
+      clearInterval(heroTimer);
+      heroTimer = setInterval(() => {
+        if (!document.body.contains(track)) return clearInterval(heroTimer);
+        track.scrollTo({ left: ((current() + 1) % n) * track.clientWidth, behavior: "smooth" });
+      }, 5000);
+    };
+    ["pointerdown", "touchstart", "focusin"].forEach((ev) => track.addEventListener(ev, () => clearInterval(heroTimer), { passive: true }));
+    start();
+  }
 
   // ---------- Order ----------
   function buildMessage(t) {
@@ -550,12 +666,10 @@
 
   function openOrder(msg) {
     if (S.order_channel === "telegram") {
-      const user = String(S.telegram || "").replace(/^@/, "");
       copyText(msg);
-      window.open("https://t.me/" + encodeURIComponent(user), "_blank", "noopener");
+      window.open("https://t.me/" + enc(String(S.telegram || "").replace(/^@/, "")), "_blank", "noopener");
     } else {
-      const num = String(S.whatsapp || "").replace(/\D/g, "");
-      window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+      window.open(`https://wa.me/${String(S.whatsapp || "").replace(/\D/g, "")}?text=${enc(msg)}`, "_blank", "noopener");
     }
   }
 
@@ -564,15 +678,14 @@
     if (!customer.name.trim()) return toast("Inserisci il tuo nome"), focusField("name");
     if (!t.pickup && !customer.address.trim()) return toast("Inserisci l'indirizzo"), focusField("address");
     if (t.belowMin) return toast(`Ordine minimo ${money(S.min_order)}`);
-    const channelOk = S.order_channel === "telegram" ? S.telegram : S.whatsapp;
-    if (!channelOk) return toast("Contatto per gli ordini non configurato");
+    if (!(S.order_channel === "telegram" ? S.telegram : S.whatsapp)) return toast("Contatto per gli ordini non configurato");
     const msg = buildMessage(t);
     lastOrder = { msg, total: t.total, count: t.count, pickup: t.pickup };
     openOrder(msg);
     cart = [];
     promo = "";
     save();
-    updateBadge();
+    updateBadges();
     location.hash = "#/done";
   }
 
@@ -590,7 +703,7 @@
     ta.remove();
   }
 
-  // ---------- Toast / badge ----------
+  // ---------- Toast / badges ----------
   let toastTimer;
   function toast(msg) {
     const el = document.getElementById("toast");
@@ -599,11 +712,9 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove("show"), 1800);
   }
-  function updateBadge() {
+  function updateBadges() {
     const n = cart.reduce((s, i) => s + i.qty, 0);
-    const b = document.getElementById("cartBadge");
-    b.textContent = n > 99 ? "99+" : n;
-    b.hidden = n === 0;
+    document.querySelectorAll("[data-cart-badge]").forEach((b) => { b.textContent = n > 99 ? "99+" : n; b.hidden = n === 0; });
   }
 
   // ---------- Router ----------
@@ -612,6 +723,7 @@
   const navStack = []; // cronologia interna, per il tasto indietro
 
   function route() {
+    closeDrawer();
     const hash = location.hash || "#/";
     if (currentHash !== null) scrollPos[currentHash] = window.scrollY;
     currentHash = hash;
@@ -625,14 +737,15 @@
 
     switch (parts[0]) {
       case undefined: html = viewHome(); tab = "home"; break;
-      case "search": html = viewSearch(params); tab = "search"; break;
-      case "category": html = viewCategory(parts[1]); tab = "search"; break;
-      case "product": html = viewProduct(parts[1]); tab = "home"; break;
-      case "offers": html = viewOffers(); tab = "home"; break;
-      case "favorites": html = viewFavorites(); tab = "favorites"; break;
-      case "cart": html = viewCart(); tab = "cart"; break;
-      case "done": html = viewDone(); tab = "cart"; break;
-      case "info": html = viewInfo(); tab = "info"; break;
+      case "menu":
+      case "search": html = viewMenu(params); tab = "menu"; break;
+      case "category": html = viewMenu(params, parts[1]); tab = "menu"; break;
+      case "product": html = viewProduct(parts[1]); tab = "menu"; break;
+      case "offers": html = viewOffers(); tab = "offers"; break;
+      case "favorites": html = viewFavorites(); tab = "profile"; break;
+      case "cart": html = viewCart(); tab = "order"; break;
+      case "done": html = viewDone(); tab = "order"; break;
+      case "info": html = viewInfo(); tab = "profile"; break;
       default: html = viewNotFound(); tab = "";
     }
 
@@ -642,20 +755,25 @@
       a.classList.toggle("active", on);
       if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     });
+    updateBadges();
+    setupHero();
     window.scrollTo(0, scrollPos[hash] || 0);
 
     if (parts[0] === "search") {
       const input = document.getElementById("searchInput");
-      if (input && window.matchMedia("(hover: hover)").matches) input.focus();
+      if (input) input.focus();
     }
-    const titles = { search: "Cerca", cart: "Carrello", favorites: "Preferiti", info: "Info", offers: "Offerte" };
+    const titles = { menu: "Menu", search: "Cerca", cart: "Il tuo ordine", favorites: "Preferiti", info: "Profilo", offers: "Offerte" };
     const p = parts[0] === "product" && byId(parts[1]);
-    document.title = p ? `${p.title} · ${S.store_name}` : titles[parts[0]] ? `${titles[parts[0]]} · ${S.store_name}` : S.store_name;
+    const c = parts[0] === "category" && catById(parts[1]);
+    const t = p ? p.title : c ? c.title : titles[parts[0]];
+    document.title = t ? `${t} · ${S.store_name}` : S.store_name;
   }
 
   function rerenderCart() {
     const y = window.scrollY;
     app.innerHTML = viewCart();
+    updateBadges();
     window.scrollTo(0, y);
   }
 
@@ -668,10 +786,18 @@
     e.stopPropagation();
 
     switch (a) {
+      case "drawer": openDrawer(); break;
+      case "drawer-close": closeDrawer(); break;
       case "back":
         if (navStack.length > 1) history.back();
         else location.hash = "#/";
         break;
+      case "slide": {
+        const track = document.getElementById("heroTrack");
+        clearInterval(heroTimer);
+        track.scrollTo({ left: Number(el.dataset.i) * track.clientWidth, behavior: "smooth" });
+        break;
+      }
       case "fav": {
         const on = toggleFav(el.dataset.id);
         el.classList.toggle("active", on);
@@ -682,7 +808,7 @@
       case "quick-add": {
         const p = byId(el.dataset.id);
         if (!p || !p.available) break;
-        if (p.variants.length || p.extras.length) location.hash = "#/product/" + encodeURIComponent(p.id);
+        if (p.variants.length || p.extras.length) location.hash = "#/product/" + enc(p.id);
         else addToCart(p.id);
         break;
       }
@@ -698,30 +824,26 @@
         break;
       }
       case "filter-cat":
-        searchState.cat = el.dataset.cat;
+        menuState.cat = el.dataset.cat;
         app.querySelectorAll('[data-action="filter-cat"]').forEach((c) => c.classList.toggle("active", c === el));
-        document.getElementById("results").innerHTML = searchResults();
+        document.getElementById("results").innerHTML = menuResults();
         break;
       case "d-inc": detail.qty = Math.min(99, detail.qty + 1); updateDetailSum(); break;
       case "d-dec": detail.qty = Math.max(1, detail.qty - 1); updateDetailSum(); break;
-      case "d-add":
-        addToCart(detail.id, detail.variant, [...detail.extras], detail.qty);
-        break;
+      case "d-add": addToCart(detail.id, detail.variant, [...detail.extras], detail.qty); break;
       case "c-inc":
       case "c-dec": {
         const line = cart.find((i) => i.key === el.dataset.key);
         if (!line) break;
         line.qty += a === "c-inc" ? 1 : -1;
         if (line.qty <= 0) cart = cart.filter((i) => i !== line);
-        save(); updateBadge(); rerenderCart();
+        save(); rerenderCart();
         break;
       }
       case "clear-cart":
-        if (confirm("Svuotare il carrello?")) { cart = []; save(); updateBadge(); rerenderCart(); }
+        if (confirm("Svuotare il carrello?")) { cart = []; save(); rerenderCart(); }
         break;
-      case "mode":
-        customer.mode = el.dataset.mode; save(); rerenderCart();
-        break;
+      case "mode": customer.mode = el.dataset.mode; save(); rerenderCart(); break;
       case "apply-promo": {
         const v = (document.getElementById("promoInput").value || "").trim().toUpperCase();
         if (!v) break;
@@ -730,26 +852,17 @@
         toast(t.offer ? "Codice applicato" : t.promoError);
         break;
       }
-      case "remove-promo":
-        promo = ""; save(); rerenderCart();
-        break;
-      case "send-order":
-        sendOrder();
-        break;
-      case "resend":
-        if (lastOrder) openOrder(lastOrder.msg);
-        break;
+      case "remove-promo": promo = ""; save(); rerenderCart(); break;
+      case "send-order": sendOrder(); break;
+      case "resend": if (lastOrder) openOrder(lastOrder.msg); break;
     }
   });
 
   document.addEventListener("input", (e) => {
     const t = e.target;
     if (t.id === "searchInput") {
-      searchState.q = t.value;
-      document.getElementById("results").innerHTML = searchResults();
-      history.replaceState(null, "", "#/search" + (t.value ? "?q=" + encodeURIComponent(t.value) : ""));
-      currentHash = location.hash;
-      navStack[navStack.length - 1] = currentHash;
+      menuState.q = t.value;
+      document.getElementById("results").innerHTML = menuResults();
     } else if (t.dataset.field) {
       customer[t.dataset.field] = t.value;
       save();
@@ -757,6 +870,7 @@
   });
 
   document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
     if (e.key === "Enter" && e.target.id === "promoInput") { e.preventDefault(); app.querySelector('[data-action="apply-promo"]').click(); }
   });
 
@@ -769,6 +883,6 @@
   });
 
   window.addEventListener("hashchange", route);
-  updateBadge();
+  renderDrawer();
   route();
 })();

@@ -1,9 +1,12 @@
 {
-  "store_name": "Il Tuo Negozio",
-  "greeting": "Ciao 👋",
-  "tagline": "Cosa ti va oggi?",
+  "store_name": "Brace & Fuoco",
+  "subtitle": "Burger House",
   "logo": "",
-  "announcement": "Consegna gratuita sopra i 25€",
+  "logo_icon": "🔥",
+  "search_placeholder": "Cerca il tuo piatto preferito…",
+  "featured_title": "Più amati",
+  "announcement": "",
+  "about": "Burger di manzo 100% italiano cotti alla brace, patatine fritte al momento e consegna veloce.",
   "currency": "€",
   "delivery_fee": 2.5,
   "free_delivery_over": 25,
@@ -12,11 +15,10 @@
   "order_channel": "whatsapp",
   "whatsapp": "393331234567",
   "telegram": "",
-  "instagram": "iltuonegozio",
+  "instagram": "iltuolocale",
   "phone": "+39 333 123 4567",
   "email": "",
   "address": "Via Roma 1, Milano",
-  "hours": "Lun–Dom 11:00–23:00",
-  "about": "Prodotti freschi preparati al momento e consegnati a casa tua.",
-  "footer": "© Il Tuo Negozio · Le immagini sono a scopo illustrativo"
+  "hours": "Lun–Dom 11:30–23:30",
+  "footer": "© Brace & Fuoco · Le immagini sono a scopo illustrativo"
 }

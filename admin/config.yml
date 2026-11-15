@@ -39,7 +39,9 @@ collections:
       - { label: "Prezzo", name: "price", widget: "number", value_type: "float", step: 0.01, min: 0 }
       - { label: "Prezzo barrato (opzionale)", name: "old_price", widget: "number", value_type: "float", step: 0.01, required: false }
       - { label: "Etichetta", name: "badge", widget: "string", required: false, hint: "Es. Bestseller, Novità, -15%" }
-      - { label: "In evidenza in home", name: "featured", widget: "boolean", default: false }
+      - { label: "Valutazione (stelle)", name: "rating", widget: "number", value_type: "float", step: 0.1, min: 0, max: 5, required: false, hint: "Es. 4.8 — lascia vuoto per non mostrarla" }
+      - { label: "Numero recensioni", name: "reviews", widget: "string", required: false, hint: "Es. 1,2K+ oppure 340" }
+      - { label: "In evidenza in home", name: "featured", widget: "boolean", default: false, hint: "Compare nella sezione in evidenza in alto" }
       - { label: "Disponibile", name: "available", widget: "boolean", default: true, hint: "Se spento il prodotto resta visibile ma non ordinabile" }
       - { label: "Visibile sul sito", name: "visible", widget: "boolean", default: true }
       - { label: "Ordine", name: "order", widget: "number", value_type: "int", required: false, hint: "Numero più basso = mostrato prima" }
@@ -77,30 +79,42 @@ collections:
       - { label: "Ordine", name: "order", widget: "number", value_type: "int", required: false }
       - { label: "Visibile", name: "visible", widget: "boolean", default: true }
 
-  # ---------------- OFFERTE ----------------
+  # ---------------- OFFERTE / BANNER ----------------
   - name: "offers"
-    label: "Offerte"
+    label: "Offerte e banner"
     label_singular: "Offerta"
     folder: "src/offers"
     create: true
     delete: true
     slug: "{{slug}}"
-    summary: "{{title}} — {{code}}"
+    summary: "{{title}} {{title_highlight}} — {{placement}}"
     fields:
-      - { label: "Titolo", name: "title", widget: "string" }
-      - { label: "Sottotitolo", name: "subtitle", widget: "string", required: false }
-      - { label: "Codice promo", name: "code", widget: "string", required: false, hint: "Il cliente lo inserisce nel carrello. Lascia vuoto per un'offerta solo informativa" }
-      - { label: "Immagine", name: "image", widget: "image", required: false }
-      - label: "Colore"
-        name: "color"
+      - label: "Dove mostrarla"
+        name: "placement"
         widget: "select"
-        default: "orange"
+        default: "hero"
         options:
-          - { label: "Arancione", value: "orange" }
-          - { label: "Rosso", value: "red" }
-          - { label: "Verde", value: "green" }
-          - { label: "Viola", value: "purple" }
-          - { label: "Blu", value: "blue" }
+          - { label: "Banner grande scorrevole in alto (home)", value: "hero" }
+          - { label: "Banner promo tipo \"Menu del giorno\" (home)", value: "banner" }
+          - { label: "Solo nella pagina Offerte", value: "list" }
+      - { label: "Etichetta", name: "label", widget: "string", required: false, hint: "Es. CALDO E FRESCO, MENU DEL GIORNO" }
+      - { label: "Titolo", name: "title", widget: "string" }
+      - { label: "Titolo — parte in arancione", name: "title_highlight", widget: "string", required: false, hint: "Seconda riga del titolo, evidenziata" }
+      - { label: "Testo", name: "subtitle", widget: "string", required: false }
+      - { label: "Bollino (banner promo)", name: "badge_text", widget: "string", required: false, hint: "Es. RISPARMI 20%" }
+      - { label: "Immagine", name: "image", widget: "image", required: false, hint: "Consigliata con sfondo scuro. Se vuota viene usata l'icona" }
+      - { label: "Icona (emoji) se senza immagine", name: "icon", widget: "string", required: false }
+      - { label: "Testo pulsante", name: "cta_text", widget: "string", required: false, hint: "Default: Ordina ora" }
+      - label: "Prodotto collegato al pulsante"
+        name: "product"
+        widget: "relation"
+        collection: "products"
+        search_fields: ["title"]
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        required: false
+        hint: "Se vuoto il pulsante apre il menu"
+      - { label: "Codice promo", name: "code", widget: "string", required: false, hint: "Il cliente lo inserisce nel carrello. Lascia vuoto per un banner solo informativo" }
       - label: "Tipo di sconto"
         name: "discount_type"
         widget: "select"
@@ -126,9 +140,11 @@ collections:
         file: "src/_data/settings.json"
         fields:
           - { label: "Nome negozio", name: "store_name", widget: "string" }
-          - { label: "Logo", name: "logo", widget: "image", required: false }
-          - { label: "Saluto in home", name: "greeting", widget: "string", required: false }
-          - { label: "Frase in home", name: "tagline", widget: "string", required: false }
+          - { label: "Sottotitolo sotto il nome", name: "subtitle", widget: "string", required: false, hint: "Es. BURGER HOUSE" }
+          - { label: "Logo (immagine)", name: "logo", widget: "image", required: false }
+          - { label: "Icona logo (emoji) se senza immagine", name: "logo_icon", widget: "string", required: false, hint: "Es. 🔥" }
+          - { label: "Testo barra di ricerca", name: "search_placeholder", widget: "string", required: false }
+          - { label: "Titolo sezione in evidenza", name: "featured_title", widget: "string", required: false, hint: "Es. Più amati" }
           - { label: "Avviso in evidenza", name: "announcement", widget: "string", required: false, hint: "Barra in alto in home. Lascia vuoto per nasconderla" }
           - { label: "Chi siamo", name: "about", widget: "text", required: false }
           - { label: "Valuta", name: "currency", widget: "string", default: "€" }

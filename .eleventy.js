@@ -45,6 +45,8 @@ module.exports = function (eleventyConfig) {
         price: toNumber(p.data.price),
         old_price: toNumber(p.data.old_price),
         badge: p.data.badge || "",
+        rating: toNumber(p.data.rating) || 0,
+        reviews: p.data.reviews || "",
         featured: !!p.data.featured,
         available: p.data.available !== false,
         extras: (p.data.extras || []).map((e) => ({
@@ -62,7 +64,14 @@ module.exports = function (eleventyConfig) {
       .map((o) => ({
         id: o.fileSlug,
         title: o.data.title,
+        title_highlight: o.data.title_highlight || "",
+        label: o.data.label || "",
         subtitle: o.data.subtitle || "",
+        placement: o.data.placement || "hero",
+        cta_text: o.data.cta_text || "",
+        product: o.data.product || "",
+        badge_text: o.data.badge_text || "",
+        icon: o.data.icon || "",
         code: (o.data.code || "").toUpperCase(),
         image: o.data.image || "",
         color: o.data.color || "orange",

@@ -1,6 +1,6 @@
 ---
-title: "Pizza"
-icon: "🍕"
+title: "Patatine"
+icon: "🍟"
 image: ""
 order: 2
 visible: true

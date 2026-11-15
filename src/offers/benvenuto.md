@@ -1,13 +1,16 @@
 ---
-title: "50% DI SCONTO"
-subtitle: "Sul tuo primo ordine, fino a 10€"
+placement: "hero"
+label: "Primo ordine"
+title: "50% di sconto"
+title_highlight: "sul primo ordine"
+subtitle: "Usa il codice WELCOME50, fino a 10€ di sconto."
+cta_text: "Scopri il menu"
 code: "WELCOME50"
-image: ""
-color: "orange"
 discount_type: "percent"
 discount_value: 50
-min_order: 15
 max_discount: 10
+min_order: 15
+icon: "🎉"
+order: 2
 active: true
-order: 1
 ---

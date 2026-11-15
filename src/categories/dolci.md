@@ -1,6 +1,6 @@
 ---
 title: "Dolci"
-icon: "🍰"
+icon: "🧁"
 image: ""
 order: 5
 visible: true

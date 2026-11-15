@@ -1,10 +1,10 @@
 ---
-title: "Acqua naturale"
+title: "Limonata della casa"
 category: "Bevande"
-subtitle: "Bottiglia 50cl"
+subtitle: "Limoni freschi e menta"
 description: ""
 image: ""
-price: 1.2
+price: 3.5
 badge: ""
 featured: false
 available: true

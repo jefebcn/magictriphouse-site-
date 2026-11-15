@@ -2,6 +2,6 @@
 title: "Bevande"
 icon: "🥤"
 image: ""
-order: 6
+order: 4
 visible: true
 ---
